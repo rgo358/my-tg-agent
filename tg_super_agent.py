@@ -10,11 +10,23 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 SESSION_STRING = os.getenv('SESSION_STRING')
-API_ID = int(os.getenv('API_ID'))
+API_ID_STR = os.getenv('API_ID')
 API_HASH = os.getenv('API_HASH')
 XAI_KEY = os.getenv('XAI_API_KEY')
+
+# Проверка переменных
+if not all([SESSION_STRING, API_ID_STR, API_HASH, XAI_KEY]):
+    logger.error("❌ Отсутствуют переменные окружения!")
+    logger.error(f"SESSION_STRING: {bool(SESSION_STRING)}")
+    logger.error(f"API_ID: {bool(API_ID_STR)}")
+    logger.error(f"API_HASH: {bool(API_HASH)}")
+    logger.error(f"XAI_API_KEY: {bool(XAI_KEY)}")
+    raise ValueError("Не все переменные окружения установлены")
+
+API_ID = int(API_ID_STR)
 
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 grok = OpenAI(api_key=XAI_KEY, base_url="https://api.x.ai/v1")
