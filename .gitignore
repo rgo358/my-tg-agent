@@ -1,0 +1,5 @@
+.env
+*.session
+tg_memory_db_v3/
+__pycache__/
+.DS_Store
